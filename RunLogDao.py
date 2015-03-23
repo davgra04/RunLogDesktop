@@ -55,7 +55,7 @@ class RunLogDao:
 
         if self.con:
             cur = self.con.cursor()
-            cur.execute("SELECT * FROM " + self.db_table)
+            cur.execute("SELECT * FROM " + self.db_table + " ORDER BY `date` DESC")
             rows = cur.fetchall()
             for row in rows:
                 runs.append( RunEntry.RunEntry(row[1], row[2], row[3], row[4], row[5], input_run_id=row[0]) )

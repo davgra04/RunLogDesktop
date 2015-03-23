@@ -41,3 +41,26 @@ class RunEntry:
 
         return self.console_table_printing_template.format(self.run_id, self.date.strftime('%Y/%m/%d'), self.seconds_run, self.seconds_rest, self.reps, printed_note)
 
+    ### Getters
+
+    def get_id(self):
+        return self.run_id
+
+    def get_date(self):
+        return self.date
+
+    def get_date_string(self):
+        return self.date.strftime('%Y/%m/%d')
+
+    def get_sec_run(self):
+        return self.seconds_run
+
+    def get_sec_rest(self):
+        return self.seconds_rest
+
+    def get_reps(self):
+        return self.reps
+
+    def get_note(self):
+        return self.note
+
