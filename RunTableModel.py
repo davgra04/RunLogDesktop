@@ -10,13 +10,20 @@ class RunTableModel(QtCore.QAbstractTableModel):
 
         self.run_entries = []
         self.columns = []
+        self.dao = None
 
-        self.dao = RunLogDao.RunLogDao(testing=False)
+    def setDatabaseInfo(self, ip, database, table, user, password):
+        if self.dao:
+            self.dao.setConnectionInfo(ip, database, table, user, password)
+        else:
+            self.dao = RunLogDao.RunLogDao(testing=False)
+            self.dao.setConnectionInfo(ip, database, table, user, password)
 
     def refresh(self, parent=None):
-        self.run_entries = self.dao.getRuns()
-        self.columns = self.dao.getColumns()
-        self.layoutChanged.emit()
+        if self.dao:
+            self.run_entries = self.dao.getRuns()
+            self.columns = self.dao.getColumns()
+            self.layoutChanged.emit()
 
     def rowCount(self, parent=None):
         return len(self.run_entries)

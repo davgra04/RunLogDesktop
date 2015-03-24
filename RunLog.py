@@ -2,7 +2,7 @@ from __future__ import print_function
 from PyQt4 import QtGui, QtCore, uic
 import sys, pprint
 import icons_runlog_rc
-import RunEntry, RunLogDao, RunTableModel
+import RunEntry, RunLogDao, RunTableModel, SettingsDialog
 
 form_class = uic.loadUiType("ui_RunLog.ui")[0]                 # Load the UI
 
@@ -19,6 +19,7 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
 
         self.actionRefresh.triggered.connect(self.btn_refresh_clicked)
         self.actionToggle_Sidebar.triggered.connect(self.btn_sidebar_toggle)
+        self.actionSettings.triggered.connect(self.btn_settings_clicked)
 
         self.model = RunTableModel.RunTableModel()
         self.runTableView.setModel(self.model)
@@ -26,7 +27,27 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         self.btn_sidebar_toggle()   # Start with sidebar hidden
         self.btn_refresh_clicked()  # Start with a refresh
 
-        self.resizeEvent(None)
+        # self.resizeEvent(None)
+        self.set_initial_size()
+
+        QtCore.QTimer.singleShot(100, self.OnLoad)
+
+
+    def OnLoad(self):
+        self.btn_settings_clicked(message="Input database connection info to connect.")
+
+    def set_initial_size(self):
+
+        col_width = 1200/6
+
+        self.runTableView.setColumnWidth(0, (col_width) if col_width < 30 else 30 )
+        self.runTableView.setColumnWidth(1, (col_width) if col_width < 80 else 80 )
+        self.runTableView.setColumnWidth(2, (col_width) if col_width < 80 else 80 )
+        self.runTableView.setColumnWidth(3, (col_width) if col_width < 80 else 80 )
+        self.runTableView.setColumnWidth(4, (col_width) if col_width < 60 else 60 )
+        # self.runTableView.setColumnWidth(5, (col_width) if col_width < 30 else 30 )
+        self.runTableView.horizontalHeader().setStretchLastSection(True)
+
 
     def resizeEvent(self, event):
 
@@ -41,19 +62,19 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         self.runTableView.horizontalHeader().setStretchLastSection(True)
 
 
-
-# void QParent::resizeEvent(QResizeEvent *event) {
-#     table_view->setColumnWidth(0, this->width()/3);
-#     table_view->setColumnWidth(1, this->width()/3);
-#     table_view->setColumnWidth(2, this->width()/3);
-
-#     QMainWindow::resizeEvent(event);
-# }
-
     def btn_refresh_clicked(self):
         print("REFRESHING!!")
         self.model.refresh()
         self.update_sidebar()
+
+
+    def btn_settings_clicked(self, message=None):
+        print("Opening Settings Dialog!")
+        ip, database, table, user, password, result = SettingsDialog.SettingsDialog.getSettingsInfo(message)
+        if result:
+            self.model.setDatabaseInfo(ip, database, table, user, password)
+            self.btn_refresh_clicked()
+
 
     def update_sidebar(self):
         self.summaryBrowser.setPlainText(
@@ -63,6 +84,7 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
             "LULE\n" +
             "LULE\n"
         )
+
 
     def btn_sidebar_toggle(self):
         if self.sidebar_visible:
