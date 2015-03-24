@@ -2,7 +2,7 @@ from __future__ import print_function
 from PyQt4 import QtGui, QtCore, uic
 import sys, pprint
 import icons_runlog_rc
-import RunEntry, RunLogDao, RunTableModel, SettingsDialog
+import RunEntry, RunLogDao, RunTableModel, SettingsDialog, AddRunDialog
 
 form_class = uic.loadUiType("ui_RunLog.ui")[0]                 # Load the UI
 
@@ -20,44 +20,39 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         self.actionRefresh.triggered.connect(self.btn_refresh_clicked)
         self.actionToggle_Sidebar.triggered.connect(self.btn_sidebar_toggle)
         self.actionSettings.triggered.connect(self.btn_settings_clicked)
+        self.actionAddRun.triggered.connect(self.btn_add_run_clicked)
 
         self.model = RunTableModel.RunTableModel()
         self.runTableView.setModel(self.model)
+    
+        self.columnMinSizes = [40, 80, 80, 80, 40, 100]
 
-        self.btn_sidebar_toggle()   # Start with sidebar hidden
-        self.btn_refresh_clicked()  # Start with a refresh
+        # self.btn_sidebar_toggle()   # Start with sidebar hidden
 
         # self.resizeEvent(None)
-        self.set_initial_size()
 
         QtCore.QTimer.singleShot(100, self.OnLoad)
 
 
     def OnLoad(self):
         self.btn_settings_clicked(message="Input database connection info to connect.")
-
-    def set_initial_size(self):
-
-        col_width = 1200/6
-
-        self.runTableView.setColumnWidth(0, (col_width) if col_width < 30 else 30 )
-        self.runTableView.setColumnWidth(1, (col_width) if col_width < 80 else 80 )
-        self.runTableView.setColumnWidth(2, (col_width) if col_width < 80 else 80 )
-        self.runTableView.setColumnWidth(3, (col_width) if col_width < 80 else 80 )
-        self.runTableView.setColumnWidth(4, (col_width) if col_width < 60 else 60 )
-        # self.runTableView.setColumnWidth(5, (col_width) if col_width < 30 else 30 )
-        self.runTableView.horizontalHeader().setStretchLastSection(True)
+        self.btn_refresh_clicked()  # Start with a refresh
+        self.resizeEvent(None)
 
 
     def resizeEvent(self, event):
 
         col_width = self.runTableView.width()/6
 
-        self.runTableView.setColumnWidth(0, (col_width) if col_width < 30 else 30 )
-        self.runTableView.setColumnWidth(1, (col_width) if col_width < 80 else 80 )
-        self.runTableView.setColumnWidth(2, (col_width) if col_width < 80 else 80 )
-        self.runTableView.setColumnWidth(3, (col_width) if col_width < 80 else 80 )
-        self.runTableView.setColumnWidth(4, (col_width) if col_width < 60 else 60 )
+
+        for index in range(self.model.columnCount()):
+            self.runTableView.setColumnWidth(index, (col_width) if col_width < self.columnMinSizes[index] else self.columnMinSizes[index])
+
+        # self.runTableView.setColumnWidth(0, (col_width) if col_width < 30 else 30 )
+        # self.runTableView.setColumnWidth(1, (col_width) if col_width < 80 else 80 )
+        # self.runTableView.setColumnWidth(2, (col_width) if col_width < 80 else 80 )
+        # self.runTableView.setColumnWidth(3, (col_width) if col_width < 80 else 80 )
+        # self.runTableView.setColumnWidth(4, (col_width) if col_width < 60 else 60 )
         # self.runTableView.setColumnWidth(5, (col_width) if col_width < 30 else 30 )
         self.runTableView.horizontalHeader().setStretchLastSection(True)
 
@@ -66,6 +61,15 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         print("REFRESHING!!")
         self.model.refresh()
         self.update_sidebar()
+
+
+    def btn_add_run_clicked(self):
+        print("Opening Add Run Dialog!")
+        date, runTime, restTime, reps, note, result = AddRunDialog.AddRunDialog.getNewRunInfo()
+        print( "date: " + date + "   runTime: " + str(runTime) + "   restTime: " + str(restTime) + "   reps: " + str(reps) + "   note: " + note + "   result: " + str(result))
+        if result:
+            self.model.addRun(date, runTime, restTime, reps, note)
+            return
 
 
     def btn_settings_clicked(self, message=None):
@@ -78,11 +82,7 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
 
     def update_sidebar(self):
         self.summaryBrowser.setPlainText(
-            "Total Run Count: " + str(self.model.rowCount()) + "\n" +
-            "LULE\n" +
-            "LULE\n" +
-            "LULE\n" +
-            "LULE\n"
+            "Total Run Count: " + str(self.model.rowCount()) + "\n"
         )
 
 
@@ -93,6 +93,7 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         else:
             self.summaryBrowser.show()
             self.sidebar_visible = True
+        self.resizeEvent(None)
 
  
 app = QtGui.QApplication(sys.argv)

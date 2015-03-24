@@ -11,6 +11,7 @@ class RunTableModel(QtCore.QAbstractTableModel):
         self.run_entries = []
         self.columns = []
         self.dao = None
+        self.columns = ["run", "date", "run time", "rest time", "reps", "notes"]
 
     def setDatabaseInfo(self, ip, database, table, user, password):
         if self.dao:
@@ -22,7 +23,8 @@ class RunTableModel(QtCore.QAbstractTableModel):
     def refresh(self, parent=None):
         if self.dao:
             self.run_entries = self.dao.getRuns()
-            self.columns = self.dao.getColumns()
+            # self.columns = self.dao.getColumns()
+            # self.columns[0] = "run"
             self.layoutChanged.emit()
 
     def rowCount(self, parent=None):
@@ -34,13 +36,16 @@ class RunTableModel(QtCore.QAbstractTableModel):
     def data(self, index, role):
         if role == QtCore.Qt.DisplayRole:
             if index.column() == 0:
-                return QtCore.QVariant(self.run_entries[index.row()].get_id())
+                # return QtCore.QVariant(self.run_entries[index.row()].get_id())
+                return self.rowCount()-index.row()
             if index.column() == 1:
                 return QtCore.QVariant(self.run_entries[index.row()].get_date_string())
             if index.column() == 2:
-                return QtCore.QVariant(self.run_entries[index.row()].get_sec_run())
+                # return QtCore.QVariant(self.run_entries[index.row()].get_sec_run())
+                return QtCore.QVariant( str(self.run_entries[index.row()].get_sec_run()/60) + "m " + str(self.run_entries[index.row()].get_sec_run()%60) + "s" )
             if index.column() == 3:
-                return QtCore.QVariant(self.run_entries[index.row()].get_sec_rest())
+                # return QtCore.QVariant(self.run_entries[index.row()].get_sec_rest())
+                return QtCore.QVariant( str(self.run_entries[index.row()].get_sec_rest()/60) + "m " + str(self.run_entries[index.row()].get_sec_rest()%60) + "s" )
             if index.column() == 4:
                 return QtCore.QVariant(self.run_entries[index.row()].get_reps())
             if index.column() == 5:
@@ -58,4 +63,9 @@ class RunTableModel(QtCore.QAbstractTableModel):
             return self.columns[section]
         return QtCore.QAbstractTableModel.headerData(self, section, orientation, role)
 
+    def addRun(self, date, runTime, restTime, reps, note):
+        print("RunTableModel:addRun")
+        self.dao.addRun(date, runTime, restTime, reps, note)
+        self.refresh()
+        return
 

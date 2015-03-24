@@ -75,6 +75,34 @@ class RunLogDao:
 
         return runs
 
+    def addRun(self, date, runTime, restTime, reps, note):
+
+        print("RunLogDao:Adding Run!")
+
+        if self.db_testing:
+            print("Pretending to add run:")
+            print( "    date: " + date + "   runTime: " + str(runTime) + "   restTime: " + str(restTime) + "   reps: " + str(reps) + "   note: " + note + "   result: " + str(result))
+            return
+
+        if self._connect():
+
+            if self.con:
+                cur = self.con.cursor()
+
+                # cur.execute("INSERT INTO `" + self.db_table + "` (`date`, `seconds_run`, `seconds_rest`, `reps`, `notes`) VALUES (" +date+", " +str(runTime)+", " +str(restTime)+", " +str(reps)+", " +note+" )")
+
+                if note:
+                    cur.execute("INSERT INTO `" + self.db_table + "` (`date`, `seconds_run`, `seconds_rest`, `reps`, `notes`) VALUES (%s, %s, %s, %s, %s)", (date, runTime, restTime, reps, note))
+                else:
+                    cur.execute("INSERT INTO `" + self.db_table + "` (`date`, `seconds_run`, `seconds_rest`, `reps`) VALUES (%s, %s, %s, %s)", (date, runTime, restTime, reps))
+
+                cur.close()
+                self.con.commit()
+
+                print("Number of rows inserted: " + str(cur.rowcount))
+
+            self._disconnect()        
+
     # Opens connection to DB
     def _connect(self):
         try:

@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/appbar.add.png</file>
     <file>icons/appbar.layout.collapse.right.variant.png</file>
     <file>icons/appbar.refresh.png</file>
     <file>icons/appbar.settings.png</file>

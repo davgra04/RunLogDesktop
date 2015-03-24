@@ -106,7 +106,7 @@
            <item row="3" column="1">
             <widget class="QLineEdit" name="editUser">
              <property name="text">
-              <string>dbADMEEN</string>
+              <string>testUser</string>
              </property>
             </widget>
            </item>
@@ -122,6 +122,9 @@
            </item>
            <item row="4" column="1">
             <widget class="QLineEdit" name="editPassword">
+             <property name="text">
+              <string>test123</string>
+             </property>
              <property name="echoMode">
               <enum>QLineEdit::Password</enum>
              </property>
@@ -163,11 +166,11 @@
  </widget>
  <tabstops>
   <tabstop>editPassword</tabstop>
+  <tabstop>buttonBox</tabstop>
   <tabstop>editIP</tabstop>
   <tabstop>editDatabase</tabstop>
   <tabstop>editTable</tabstop>
   <tabstop>editUser</tabstop>
-  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
  <connections/>
