@@ -30,7 +30,7 @@ Note: The tool has been tested on Windows with Python 2.7.9.
 
 Upon launching `RunLogDesktop` (or by clicking "Settings") you are asked for the following connection information:
 
-`Database IP` - IP address of the MySQL server hosting the RunLog.
+`RunLog Database IP` - IP address of the MySQL server hosting the RunLog.
 
 `Database` - Name of the database to connect to.
 
