@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_AddRunDialog.ui'
 #
-# Created: Thu Mar 26 00:55:21 2015
+# Created: Thu Mar 26 22:05:17 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -90,7 +90,8 @@ class Ui_Dialog(object):
         self.editRunMinutes.setObjectName(_fromUtf8("editRunMinutes"))
         self.horizontalLayout.addWidget(self.editRunMinutes)
         self.editRunSeconds = QtGui.QSpinBox(self.frame_2)
-        self.editRunSeconds.setMaximum(59)
+        self.editRunSeconds.setMinimum(-1)
+        self.editRunSeconds.setMaximum(60)
         self.editRunSeconds.setObjectName(_fromUtf8("editRunSeconds"))
         self.horizontalLayout.addWidget(self.editRunSeconds)
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.frame_2)
@@ -107,7 +108,8 @@ class Ui_Dialog(object):
         self.editRestMinutes.setObjectName(_fromUtf8("editRestMinutes"))
         self.horizontalLayout_3.addWidget(self.editRestMinutes)
         self.editRestSeconds = QtGui.QSpinBox(self.frame_3)
-        self.editRestSeconds.setMaximum(59)
+        self.editRestSeconds.setMinimum(-1)
+        self.editRestSeconds.setMaximum(60)
         self.editRestSeconds.setObjectName(_fromUtf8("editRestSeconds"))
         self.horizontalLayout_3.addWidget(self.editRestSeconds)
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.frame_3)

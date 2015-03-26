@@ -1,50 +1,72 @@
 from __future__ import print_function
 from PyQt4 import QtGui, QtCore, uic
+from datetime import date
 from ui_AddRunDialog import Ui_Dialog
 import sys, pprint
 
-# form_class = uic.loadUiType("ui_AddRunDialog.ui")[0]                 # Load the UI
-
+# The QDialog presented to the user for adding new runs to the database
 class AddRunDialog(QtGui.QDialog, Ui_Dialog):
 
     def __init__(self, parent = None):
         super(AddRunDialog, self).__init__(parent)
         self.setupUi(self)
 
+        # Set up Calendar date selector
         self.editCalendarDate.setGridVisible(True)
         self.editCalendarDate.clicked[QtCore.QDate].connect(self.showDate)
+        self.showDate(QtCore.QDate.currentDate())
 
         # OK and Cancel buttons
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
+        # Connect handlers for the seconds QSpinBoxes for run/rest
+        self.connect(self.editRunSeconds, QtCore.SIGNAL('valueChanged(int)'), self.runTimeUpdated)
+        self.connect(self.editRestSeconds, QtCore.SIGNAL('valueChanged(int)'), self.restTimeUpdated)
+
+
+    def runTimeUpdated(self, value):
+        # print('Run Time Updated!! (' + str(value) + ')')
+        if value == -1:
+            if self.editRunMinutes.value() != 0:                        # Decremented past minute
+                self.editRunSeconds.setValue(59)
+                self.editRunMinutes.setValue(self.editRunMinutes.value()-1)
+                # print('Decremented past minute!')
+            else:                                                       # Couldn't decrement
+                self.editRunSeconds.setValue(0)
+                # print('Couldn\'t decrement!')
+
+        elif value == 60:                                               # Incremented past minute
+            self.editRunSeconds.setValue(0)
+            self.editRunMinutes.setValue(self.editRunMinutes.value()+1)
+            # print('Incremented past minute!')
+
+
+    def restTimeUpdated(self, value):
+        # print('Rest Time Updated!! (' + str(value) + ')')
+        if value == -1:
+            if self.editRestMinutes.value() != 0:                        # Decremented past minute
+                self.editRestSeconds.setValue(59)
+                self.editRestMinutes.setValue(self.editRestMinutes.value()-1)
+                # print('Decremented past minute!')
+            else:                                                       # Couldn't decrement
+                self.editRestSeconds.setValue(0)
+                # print('Couldn\'t decrement!')
+
+        elif value == 60:                                               # Incremented past minute
+            self.editRestSeconds.setValue(0)
+            self.editRestMinutes.setValue(self.editRunMinutes.value()+1)
+            # print('Incremented past minute!')
+
+
     def showDate(self, date):
         self.editCalendarOutput.setText(date.toString())
 
-    # get the ip from the dialog
+
+    # get the date from the dialog
     def date(self):
         return self.editCalendarDate.selectedDate()
-        # return self.ip
 
-    # # get the database from the dialog
-    # def database(self):
-    #     return str( self.editDatabase.text() )
-    #     # return self.database
-
-    # # get the table from the dialog
-    # def table(self):
-    #     return str( self.editTable.text() )
-    #     # return self.table
-
-    # # get the user from the dialog
-    # def user(self):
-    #     return str( self.editUser.text() )
-    #     # return self.user
-
-    # # get the password from the dialog
-    # def password(self):
-    #     return str( self.editPassword.text() )
-    #     # return self.password
 
     # static method to create the dialog and return (date, time, accepted)
     @staticmethod

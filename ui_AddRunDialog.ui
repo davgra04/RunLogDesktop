@@ -151,8 +151,11 @@
                 <property name="suffix">
                  <string> sec</string>
                 </property>
+                <property name="minimum">
+                 <number>-1</number>
+                </property>
                 <property name="maximum">
-                 <number>59</number>
+                 <number>60</number>
                 </property>
                </widget>
               </item>
@@ -189,8 +192,11 @@
                 <property name="suffix">
                  <string> sec</string>
                 </property>
+                <property name="minimum">
+                 <number>-1</number>
+                </property>
                 <property name="maximum">
-                 <number>59</number>
+                 <number>60</number>
                 </property>
                </widget>
               </item>

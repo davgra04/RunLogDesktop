@@ -7,17 +7,11 @@ import RunEntry
 # Object for accessing the runlog database
 class RunLogDao:
 
-    # db_ip = "10.0.0.218"
-    # db_user = "dbADMEEN"
-    # db_pw = "joshIsAHagmo"
-    # db_database = "personalDB"
-    # db_table = "runlog"
-
-    con = None          # Connection object to DB
-
     def __init__(self, testing=False):
+
         self.db_testing = testing
         return
+
 
     def setConnectionInfo(self, ip, database, table, user, password):
 
@@ -29,13 +23,14 @@ class RunLogDao:
 
         return
 
+
     def getColumns(self):
 
         if self.db_testing:
             return ["id", "date", "seconds_run", "seconds_rest", "reps", "note"]
 
         cols = []
-    
+
         if self._connect():
 
             if self.con:
@@ -46,14 +41,17 @@ class RunLogDao:
                     cols.append(col[0])
 
             self._disconnect()
-            
+
         return cols
 
+
     def get_test_runs(self):
+
         runs = []
         for index in range(0,20):
             runs.append( RunEntry.RunEntry(date(2015, 3, 22), 70, 230, 1337, "HUE HUE HUE", input_run_id=1337+index) )
         return runs
+
 
     def getRuns(self):
 
@@ -75,10 +73,9 @@ class RunLogDao:
 
         return runs
 
+
     def addRun(self, date, runTime, restTime, reps, note):
-
-        print("RunLogDao:Adding Run!")
-
+        # print("RunLogDao:Adding Run!")
         if self.db_testing:
             print("Pretending to add run:")
             print( "    date: " + date + "   runTime: " + str(runTime) + "   restTime: " + str(restTime) + "   reps: " + str(reps) + "   note: " + note + "   result: " + str(result))
@@ -89,8 +86,6 @@ class RunLogDao:
             if self.con:
                 cur = self.con.cursor()
 
-                # cur.execute("INSERT INTO `" + self.db_table + "` (`date`, `seconds_run`, `seconds_rest`, `reps`, `notes`) VALUES (" +date+", " +str(runTime)+", " +str(restTime)+", " +str(reps)+", " +note+" )")
-
                 if note:
                     cur.execute("INSERT INTO `" + self.db_table + "` (`date`, `seconds_run`, `seconds_rest`, `reps`, `notes`) VALUES (%s, %s, %s, %s, %s)", (date, runTime, restTime, reps, note))
                 else:
@@ -98,10 +93,10 @@ class RunLogDao:
 
                 cur.close()
                 self.con.commit()
-
                 print("Number of rows inserted: " + str(cur.rowcount))
 
-            self._disconnect()        
+            self._disconnect()
+
 
     # Opens connection to DB
     def _connect(self):
@@ -109,9 +104,7 @@ class RunLogDao:
             self.con = mdb.connect(self.db_ip, self.db_user, self.db_pw, self.db_database)
             return True
         except mdb.Error, e:
-  
             print( "Error %d: %s" % (e.args[0],e.args[1]) )
-            # sys.exit(1)
             return False
 
 
@@ -120,3 +113,4 @@ class RunLogDao:
         if self.con:
             self.con.close()
         return
+
