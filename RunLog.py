@@ -1,12 +1,22 @@
 from __future__ import print_function
 from PyQt4 import QtGui, QtCore, uic
+from ui_RunLog import Ui_MainWindow
 import sys, pprint
 import icons_runlog_rc
 import RunEntry, RunLogDao, RunTableModel, SettingsDialog, AddRunDialog
 
-form_class = uic.loadUiType("ui_RunLog.ui")[0]                 # Load the UI
+# form_class = uic.loadUiType("ui_RunLog.ui")[0]                 # Load the UI from file
 
-class MyWindowClass(QtGui.QMainWindow, form_class):
+def resource_path(relative):
+    return os.path.join(
+        os.environ.get(
+            "_MEIPASS2",
+            os.path.abspath(".")
+        ),
+        relative
+    )
+
+class MyWindowClass(QtGui.QMainWindow, Ui_MainWindow):
 
     console_table_printing_template = "{0:>5}  {1:>10}  {2:>11}  {3:>12}  {4:>4}  {5:103}"
     sidebar_visible = True
@@ -14,6 +24,9 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.setupUi(self)
+
+        # self.ui = ui_RunLog.Ui_MainWindow()
+        # self.ui.setupUi(self)
 
         # self.dao = RunLogDao.RunLogDao(testing=False)
 
@@ -97,7 +110,11 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
 
  
 app = QtGui.QApplication(sys.argv)
+app.setWindowIcon(QtGui.QIcon("res/ic_launcher.ico"))
 myWindow = MyWindowClass(None)
+# ui = Ui_MainWindow()
+# ui.setupUi(myWindow)
+
 myWindow.show()
 app.exec_()
 

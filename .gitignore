@@ -59,3 +59,8 @@ target/
 
 # icon images
 icons/
+
+# sql stuff
+*.sql
+
+

@@ -1,10 +1,11 @@
 from __future__ import print_function
 from PyQt4 import QtGui, QtCore, uic
+from ui_AddRunDialog import Ui_Dialog
 import sys, pprint
 
-form_class = uic.loadUiType("ui_AddRunDialog.ui")[0]                 # Load the UI
+# form_class = uic.loadUiType("ui_AddRunDialog.ui")[0]                 # Load the UI
 
-class AddRunDialog(QtGui.QDialog, form_class):
+class AddRunDialog(QtGui.QDialog, Ui_Dialog):
 
     def __init__(self, parent = None):
         super(AddRunDialog, self).__init__(parent)

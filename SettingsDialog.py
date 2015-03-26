@@ -1,15 +1,16 @@
 from __future__ import print_function
 from PyQt4 import QtGui, uic
+from ui_SettingsDialog import Ui_Dialog
 import sys, pprint
 
-form_class = uic.loadUiType("ui_SettingsDialog.ui")[0]                 # Load the UI
+# form_class = uic.loadUiType("ui_SettingsDialog.ui")[0]                 # Load the UI
 
-class SettingsDialog(QtGui.QDialog, form_class):
+class SettingsDialog(QtGui.QDialog, Ui_Dialog):
 
     def __init__(self, message = None, parent = None):
         super(SettingsDialog, self).__init__(parent)
         self.setupUi(self)
-
+        
         if message:
             self.messageLabel.setText(message)
         else:
